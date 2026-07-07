@@ -20,9 +20,8 @@ import { AppLayout } from "@/components/AppLayout";
 import { GlassCard } from "@/components/GlassCard";
 import { StatMeter } from "@/components/StatMeter";
 import { useI18n } from "@/lib/i18n";
-import { pcTelemetry, streamStatus } from "@/data/mock";
-import { subscribeTelemetry } from "@/services/api";
-import type { PcTelemetry } from "@/lib/types";
+import { SystemService, StreamingService } from "@/services";
+import type { StreamingStatus, SystemInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/my-pc")({
@@ -62,13 +61,29 @@ function InfoTile({
 
 function MyPcPage() {
   const { t } = useI18n();
-  const [tel, setTel] = useState<PcTelemetry>(pcTelemetry);
+  const [sys, setSys] = useState<SystemInfo | null>(null);
+  const [stream, setStream] = useState<StreamingStatus | null>(null);
 
-  // Live telemetry subscription (mock now, Lave Agent WebSocket/SSE later).
-  useEffect(() => subscribeTelemetry(setTel), []);
+  // Live telemetry subscriptions (mock now, Lave Agent WebSocket later).
+  useEffect(() => {
+    SystemService.getSystemInfo().then(setSys);
+    StreamingService.getStatus().then(setStream);
+    const offSys = SystemService.subscribe(setSys);
+    const offStream = StreamingService.subscribe(setStream);
+    return () => {
+      offSys();
+      offStream();
+    };
+  }, []);
+
+  if (!sys || !stream) return null;
+
+  const tel = sys;
+  const net = sys.network;
+  const streamStatus = stream;
 
   const qualityLabel =
-    streamStatus.quality === "excellent" ? t("common.excellent") : t("common.good");
+    net.quality === "excellent" ? t("common.excellent") : t("common.good");
 
   return (
     <AppLayout>
@@ -118,8 +133,8 @@ function MyPcPage() {
           <div className="grid grid-cols-2 gap-4">
             <InfoTile icon={Gamepad2} accent label={t("mypc.runningGame")} value={tel.currentGame ?? t("mypc.idle")} />
             <InfoTile icon={Clock} accent label={t("mypc.uptime")} value={tel.uptime} />
-            <InfoTile icon={ArrowDownToLine} accent label={t("mypc.download")} value={`${tel.downloadMbps}`} sub="Mbps" />
-            <InfoTile icon={ArrowUpFromLine} accent label={t("mypc.upload")} value={`${tel.uploadMbps}`} sub="Mbps" />
+            <InfoTile icon={ArrowDownToLine} accent label={t("mypc.download")} value={`${net.downloadMbps}`} sub="Mbps" />
+            <InfoTile icon={ArrowUpFromLine} accent label={t("mypc.upload")} value={`${net.uploadMbps}`} sub="Mbps" />
           </div>
         </section>
       </div>
@@ -128,9 +143,9 @@ function MyPcPage() {
       <section className="mt-8">
         <h2 className="mb-4 font-display text-xl font-bold">{t("mypc.network")}</h2>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <InfoTile icon={Radio} accent label={t("mypc.latency")} value={`${tel.latencyMs} ms`} />
-          <InfoTile icon={ArrowDownToLine} accent label={t("mypc.download")} value={`${tel.downloadMbps} Mbps`} />
-          <InfoTile icon={ArrowUpFromLine} accent label={t("mypc.upload")} value={`${tel.uploadMbps} Mbps`} />
+          <InfoTile icon={Radio} accent label={t("mypc.latency")} value={`${net.latencyMs} ms`} />
+          <InfoTile icon={ArrowDownToLine} accent label={t("mypc.download")} value={`${net.downloadMbps} Mbps`} />
+          <InfoTile icon={ArrowUpFromLine} accent label={t("mypc.upload")} value={`${net.uploadMbps} Mbps`} />
           <InfoTile icon={Wifi} accent label={t("mypc.quality")} value={qualityLabel} />
         </div>
       </section>
@@ -160,7 +175,7 @@ function MyPcPage() {
               icon={Gamepad2}
               accent
               label={t("mypc.controller")}
-              value={streamStatus.controllerConnected ? t("mypc.connected") : t("mypc.disconnected")}
+              value={streamStatus.controller.connected ? t("mypc.connected") : t("mypc.disconnected")}
             />
           </div>
         </GlassCard>
