@@ -1,4 +1,10 @@
-import type { Game, PcStatus, PcTelemetry, StreamStatus } from "@/lib/types";
+import type {
+  ControllerInfo,
+  Game,
+  NetworkInfo,
+  StreamingStatus,
+  SystemInfo,
+} from "@/lib/types";
 
 import game1 from "@/assets/game-1.jpg";
 import game2 from "@/assets/game-2.jpg";
@@ -9,7 +15,9 @@ import game6 from "@/assets/game-6.jpg";
 import game7 from "@/assets/game-7.jpg";
 import game8 from "@/assets/game-8.jpg";
 
-// Realistic mock data. Structured to be swapped for live Lave Agent data later.
+// Realistic mock data. This module is consumed ONLY by the service layer
+// (src/services/*). Pages and components never import it directly — they call
+// services, which today return this data and tomorrow will call the Lave Agent.
 
 const now = Date.now();
 const hoursAgo = (h: number) => new Date(now - h * 3600_000).toISOString();
@@ -114,7 +122,18 @@ export const games: Game[] = [
   },
 ];
 
-export const pcStatus: PcStatus = {
+export const networkInfo: NetworkInfo = {
+  latencyMs: 12,
+  jitterMs: 3,
+  downloadMbps: 938,
+  uploadMbps: 412,
+  packetLossPercent: 0.1,
+  quality: "excellent",
+  connectionType: "fiber",
+  ssid: null,
+};
+
+export const systemInfo: SystemInfo = {
   online: true,
   specs: {
     cpu: "AMD Ryzen 7 7800X3D",
@@ -123,9 +142,6 @@ export const pcStatus: PcStatus = {
     storage: "2 TB NVMe SSD",
     internet: "940 Mbps Fiber",
   },
-};
-
-export const pcTelemetry: PcTelemetry = {
   cpuUsage: 34,
   gpuUsage: 58,
   ramUsage: 47,
@@ -136,12 +152,18 @@ export const pcTelemetry: PcTelemetry = {
   batteryCharging: false,
   currentGame: "Aetherbound",
   uptime: "2d 14h 32m",
-  latencyMs: 12,
-  downloadMbps: 938,
-  uploadMbps: 412,
+  network: networkInfo,
 };
 
-export const streamStatus: StreamStatus = {
+export const controllerInfo: ControllerInfo = {
+  connected: true,
+  model: "Xbox Wireless Controller",
+  type: "xbox",
+  batteryPercent: 82,
+  playerSlot: 1,
+};
+
+export const streamingStatus: StreamingStatus = {
   state: "streaming",
   resolution: "1920 × 1080",
   fps: 60,
@@ -150,7 +172,7 @@ export const streamStatus: StreamStatus = {
   quality: "excellent",
   latencyMs: 14,
   packetLossPercent: 0.1,
-  controllerConnected: true,
+  controller: controllerInfo,
 };
 
 export const storeLabels: Record<Game["store"], string> = {

@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { Search, RefreshCw, Plug } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { GameCard } from "@/components/GameCard";
 import { useI18n, type TKey } from "@/lib/i18n";
-import { games as initialGames } from "@/data/mock";
+import { GameService } from "@/services";
+import type { Game } from "@/lib/types";
 
 export const Route = createFileRoute("/library")({
   head: () => ({
@@ -21,12 +22,18 @@ type Filter = "all" | "installed" | "favorites" | "recent";
 
 function LibraryPage() {
   const { t } = useI18n();
-  const [games, setGames] = useState(initialGames);
+  const [games, setGames] = useState<Game[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
 
-  const toggleFavorite = (id: string) =>
+  useEffect(() => {
+    GameService.list().then(setGames);
+  }, []);
+
+  const toggleFavorite = async (id: string) => {
+    await GameService.toggleFavorite(id);
     setGames((prev) => prev.map((g) => (g.id === id ? { ...g, favorite: !g.favorite } : g)));
+  };
 
   const filtered = useMemo(() => {
     let list = games;

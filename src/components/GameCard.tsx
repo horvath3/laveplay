@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Play, Download, Heart, Check, Clock } from "lucide-react";
 import type { Game } from "@/lib/types";
-import { storeLabels } from "@/data/mock";
+import { storeLabels } from "@/services";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 

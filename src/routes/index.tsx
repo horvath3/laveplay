@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { Play, Library as LibraryIcon, Zap, HardDriveDownload, RefreshCw, Power } from "lucide-react";
@@ -5,8 +6,8 @@ import { AppLayout } from "@/components/AppLayout";
 import { PcStatusCard } from "@/components/PcStatusCard";
 import { GlassCard } from "@/components/GlassCard";
 import { useI18n } from "@/lib/i18n";
-import { games, pcStatus } from "@/data/mock";
-import type { Game } from "@/lib/types";
+import { GameService, SystemService } from "@/services";
+import type { Game, PcStatus } from "@/lib/types";
 import heroBg from "@/assets/hero-bg.jpg";
 
 export const Route = createFileRoute("/")({
@@ -62,6 +63,13 @@ function GameRow({ title, items }: { title: string; items: Game[] }) {
 
 function Home() {
   const { t } = useI18n();
+  const [games, setGames] = useState<Game[]>([]);
+  const [status, setStatus] = useState<PcStatus | null>(null);
+
+  useEffect(() => {
+    GameService.list().then(setGames);
+    SystemService.getStatus().then(setStatus);
+  }, []);
 
   const continuePlaying = [...games]
     .filter((g) => g.lastPlayed)
@@ -97,7 +105,7 @@ function Home() {
               className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-primary"
             >
               <span className="h-2 w-2 rounded-full bg-primary animate-pulse-ring" />
-              {pcStatus.online ? t("pc.online") : t("pc.offline")} · {t("pc.status")}
+              {status?.online === false ? t("pc.offline") : t("pc.online")} · {t("pc.status")}
             </motion.span>
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -143,7 +151,7 @@ function Home() {
             transition={{ delay: 0.15 }}
             className="justify-self-center lg:justify-self-end"
           >
-            <PcStatusCard status={pcStatus} />
+            {status && <PcStatusCard status={status} />}
           </motion.div>
         </div>
       </section>

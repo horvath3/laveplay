@@ -1,6 +1,13 @@
-// Domain types for Lave Play. These mirror the payloads the future Lave Agent
-// (Windows companion app) will stream over WebSocket / SSE, so the UI can be
-// wired to a live source later without shape changes.
+// Domain types for Lave Play.
+//
+// These interfaces are the contract between the UI and the service layer.
+// They intentionally mirror the payloads the future **Lave Agent** (the
+// Windows companion app) will expose over HTTP and stream over WebSocket,
+// so the UI can be wired to a live source later without any shape changes.
+
+/* -------------------------------------------------------------------------- */
+/* Games                                                                      */
+/* -------------------------------------------------------------------------- */
 
 export type StorePlatform = "steam" | "epic" | "ubisoft" | "ea" | "local";
 
@@ -20,6 +27,10 @@ export interface Game {
   genre: string;
 }
 
+/* -------------------------------------------------------------------------- */
+/* System                                                                     */
+/* -------------------------------------------------------------------------- */
+
 export interface PcSpecs {
   cpu: string;
   gpu: string;
@@ -28,12 +39,13 @@ export interface PcSpecs {
   internet: string;
 }
 
-export interface PcStatus {
+/**
+ * Full live snapshot of the host gaming PC. The Lave Agent will emit this
+ * shape both from `GET /system` and as `system` frames over the socket.
+ */
+export interface SystemInfo {
   online: boolean;
   specs: PcSpecs;
-}
-
-export interface PcTelemetry {
   cpuUsage: number; // %
   gpuUsage: number; // %
   ramUsage: number; // %
@@ -44,15 +56,51 @@ export interface PcTelemetry {
   batteryCharging: boolean;
   currentGame: string | null;
   uptime: string;
-  latencyMs: number;
-  downloadMbps: number;
-  uploadMbps: number;
+  network: NetworkInfo;
 }
 
-export type StreamState = "idle" | "streaming" | "connecting";
-export type ConnectionQuality = "excellent" | "good" | "fair" | "poor";
+/** Convenience subset used by the compact status card. */
+export type PcStatus = Pick<SystemInfo, "online" | "specs">;
 
-export interface StreamStatus {
+/* -------------------------------------------------------------------------- */
+/* Network                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export type ConnectionQuality = "excellent" | "good" | "fair" | "poor";
+export type ConnectionType = "fiber" | "ethernet" | "wifi" | "cellular";
+
+export interface NetworkInfo {
+  latencyMs: number;
+  jitterMs: number;
+  downloadMbps: number;
+  uploadMbps: number;
+  packetLossPercent: number;
+  quality: ConnectionQuality;
+  connectionType: ConnectionType;
+  ssid: string | null;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Controller                                                                 */
+/* -------------------------------------------------------------------------- */
+
+export type ControllerType = "xbox" | "playstation" | "generic" | "keyboard";
+
+export interface ControllerInfo {
+  connected: boolean;
+  model: string;
+  type: ControllerType;
+  batteryPercent: number | null; // null when wired / no battery
+  playerSlot: number;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Streaming                                                                  */
+/* -------------------------------------------------------------------------- */
+
+export type StreamState = "idle" | "connecting" | "streaming";
+
+export interface StreamingStatus {
   state: StreamState;
   resolution: string;
   fps: number;
@@ -61,5 +109,5 @@ export interface StreamStatus {
   quality: ConnectionQuality;
   latencyMs: number;
   packetLossPercent: number;
-  controllerConnected: boolean;
+  controller: ControllerInfo;
 }
