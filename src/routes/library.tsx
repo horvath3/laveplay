@@ -99,16 +99,33 @@ function LibraryPage() {
             </button>
           ))}
         </div>
-        <div className="glass flex items-center gap-2 rounded-xl px-4 py-2.5 md:w-72">
-          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t("lib.search")}
-            className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          />
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="glass flex items-center gap-2 rounded-xl px-4 py-2.5 md:w-64">
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("lib.search")}
+              className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+          <div className="glass flex items-center gap-2 rounded-xl px-3 py-2">
+            <ArrowDownWideNarrow className="h-4 w-4 shrink-0 text-primary" />
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as Sort)}
+              className="bg-transparent text-sm font-medium text-foreground outline-none [&>option]:bg-popover"
+            >
+              <option value="recent">{t("lib.sortRecent")}</option>
+              <option value="name">{t("lib.sortName")}</option>
+              <option value="playtime">{t("lib.sortPlaytime")}</option>
+              <option value="size">{t("lib.sortSize")}</option>
+              <option value="rating">{t("lib.sortRating")}</option>
+            </select>
+          </div>
         </div>
       </div>
+
 
       {/* Grid */}
       <motion.div
