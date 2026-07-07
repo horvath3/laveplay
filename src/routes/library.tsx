@@ -19,6 +19,7 @@ export const Route = createFileRoute("/library")({
 });
 
 type Filter = "all" | "installed" | "favorites" | "recent";
+type Sort = "recent" | "name" | "playtime" | "size" | "rating";
 
 function LibraryPage() {
   const { t } = useI18n();
