@@ -92,6 +92,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Lave Play — Play Your Own PC Anywhere" },
+      { name: "description", content: "Turn your gaming PC into your own cloud gaming server. Stream your games from anywhere." },
+      { property: "og:description", content: "Turn your gaming PC into your own cloud gaming server. Stream your games from anywhere." },
+      { name: "twitter:description", content: "Turn your gaming PC into your own cloud gaming server. Stream your games from anywhere." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3eaf61a3-00ca-4afd-b4a7-4cb8ad4d016b/id-preview-d2785d07--2351eb73-4612-4096-a45e-1b45eca340f9.lovable.app-1783431435483.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3eaf61a3-00ca-4afd-b4a7-4cb8ad4d016b/id-preview-d2785d07--2351eb73-4612-4096-a45e-1b45eca340f9.lovable.app-1783431435483.png" },
     ],
     links: [
       {
