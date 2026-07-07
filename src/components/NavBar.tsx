@@ -6,6 +6,7 @@ import {
   Home,
   Library,
   MonitorCog,
+  MonitorPlay,
   Settings,
   LogIn,
   Menu,
