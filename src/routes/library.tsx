@@ -25,6 +25,7 @@ function LibraryPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<Sort>("recent");
 
   useEffect(() => {
     GameService.list().then(setGames);
@@ -36,13 +37,22 @@ function LibraryPage() {
   };
 
   const filtered = useMemo(() => {
-    let list = games;
+    let list = [...games];
     if (filter === "installed") list = list.filter((g) => g.installed);
     if (filter === "favorites") list = list.filter((g) => g.favorite);
-    if (filter === "recent") list = list.filter((g) => g.lastPlayed).sort((a, b) => (b.lastPlayed! > a.lastPlayed! ? 1 : -1));
+    if (filter === "recent") list = list.filter((g) => g.lastPlayed);
     if (query) list = list.filter((g) => g.title.toLowerCase().includes(query.toLowerCase()));
+
+    const byRecent = (a: Game, b: Game) =>
+      (b.lastPlayed ?? "") > (a.lastPlayed ?? "") ? 1 : -1;
+    if (sort === "recent") list.sort(byRecent);
+    if (sort === "name") list.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "playtime") list.sort((a, b) => b.playTimeMinutes - a.playTimeMinutes);
+    if (sort === "size") list.sort((a, b) => b.installedSizeGb - a.installedSizeGb);
+    if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
     return list;
-  }, [games, filter, query]);
+  }, [games, filter, query, sort]);
+
 
   const filters: { key: Filter; label: TKey }[] = [
     { key: "all", label: "lib.all" },
