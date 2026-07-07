@@ -121,6 +121,13 @@ export interface ControllerInfo {
 
 export type StreamState = "idle" | "connecting" | "streaming";
 
+export interface AudioInfo {
+  enabled: boolean;
+  codec: string;
+  channels: string; // e.g. "Stereo", "5.1 Surround"
+  sampleRateKhz: number;
+}
+
 export interface StreamingStatus {
   state: StreamState;
   resolution: string;
@@ -130,5 +137,9 @@ export interface StreamingStatus {
   quality: ConnectionQuality;
   latencyMs: number;
   packetLossPercent: number;
+  hdr: boolean;
+  sessionDuration: string;
+  audio: AudioInfo;
   controller: ControllerInfo;
 }
+
