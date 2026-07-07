@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Search, RefreshCw, Plug } from "lucide-react";
+import { Search, RefreshCw, Plug, ArrowDownWideNarrow } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { GameCard } from "@/components/GameCard";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -99,7 +99,7 @@ function LibraryPage() {
             </button>
           ))}
         </div>
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="glass flex items-center gap-2 rounded-xl px-4 py-2.5 md:w-64">
             <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
