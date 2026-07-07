@@ -9,12 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as StreamingRouteImport } from './routes/streaming'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as MyPcRouteImport } from './routes/my-pc'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GameGameIdRouteImport } from './routes/game.$gameId'
 
+const StreamingRoute = StreamingRouteImport.update({
+  id: '/streaming',
+  path: '/streaming',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -40,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GameGameIdRoute = GameGameIdRouteImport.update({
+  id: '/game/$gameId',
+  path: '/game/$gameId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +59,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/my-pc': typeof MyPcRoute
   '/settings': typeof SettingsRoute
+  '/streaming': typeof StreamingRoute
+  '/game/$gameId': typeof GameGameIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +68,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/my-pc': typeof MyPcRoute
   '/settings': typeof SettingsRoute
+  '/streaming': typeof StreamingRoute
+  '/game/$gameId': typeof GameGameIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +78,37 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/my-pc': typeof MyPcRoute
   '/settings': typeof SettingsRoute
+  '/streaming': typeof StreamingRoute
+  '/game/$gameId': typeof GameGameIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/library' | '/login' | '/my-pc' | '/settings'
+  fullPaths:
+    | '/'
+    | '/library'
+    | '/login'
+    | '/my-pc'
+    | '/settings'
+    | '/streaming'
+    | '/game/$gameId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/library' | '/login' | '/my-pc' | '/settings'
-  id: '__root__' | '/' | '/library' | '/login' | '/my-pc' | '/settings'
+  to:
+    | '/'
+    | '/library'
+    | '/login'
+    | '/my-pc'
+    | '/settings'
+    | '/streaming'
+    | '/game/$gameId'
+  id:
+    | '__root__'
+    | '/'
+    | '/library'
+    | '/login'
+    | '/my-pc'
+    | '/settings'
+    | '/streaming'
+    | '/game/$gameId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,10 +117,19 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MyPcRoute: typeof MyPcRoute
   SettingsRoute: typeof SettingsRoute
+  StreamingRoute: typeof StreamingRoute
+  GameGameIdRoute: typeof GameGameIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/streaming': {
+      id: '/streaming'
+      path: '/streaming'
+      fullPath: '/streaming'
+      preLoaderRoute: typeof StreamingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -116,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/game/$gameId': {
+      id: '/game/$gameId'
+      path: '/game/$gameId'
+      fullPath: '/game/$gameId'
+      preLoaderRoute: typeof GameGameIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +181,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MyPcRoute: MyPcRoute,
   SettingsRoute: SettingsRoute,
+  StreamingRoute: StreamingRoute,
+  GameGameIdRoute: GameGameIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

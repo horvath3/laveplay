@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "@tanstack/react-router";
 import { Play, Download, Heart, Check, Clock } from "lucide-react";
 import type { Game } from "@/lib/types";
 import { storeLabels } from "@/services";
@@ -73,20 +74,28 @@ export function GameCard({
         </div>
 
         {/* Hover play overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <button className="animate-pulse-ring grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_30px_oklch(0.73_0.19_129/0.6)] transition-transform hover:scale-105">
+        <Link
+          to="/game/$gameId"
+          params={{ gameId: game.id }}
+          className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        >
+          <span className="animate-pulse-ring grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_30px_oklch(0.73_0.19_129/0.6)] transition-transform hover:scale-105">
             <Play className="ml-0.5 h-7 w-7 fill-current" />
-          </button>
-        </div>
+          </span>
+        </Link>
       </div>
+
 
       {/* Info */}
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="truncate font-display text-base font-bold text-foreground">{game.title}</h3>
+            <Link to="/game/$gameId" params={{ gameId: game.id }} className="block">
+              <h3 className="truncate font-display text-base font-bold text-foreground transition-colors hover:text-primary">{game.title}</h3>
+            </Link>
             <p className="text-xs text-muted-foreground">{game.genre}</p>
           </div>
+
         </div>
 
         <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] text-muted-foreground">

@@ -10,6 +10,13 @@
 /* -------------------------------------------------------------------------- */
 
 export type StorePlatform = "steam" | "epic" | "ubisoft" | "ea" | "local";
+export type ControllerSupport = "full" | "partial" | "none";
+export type StreamingCompat = "optimized" | "supported" | "experimental";
+
+export interface Achievements {
+  unlocked: number;
+  total: number;
+}
 
 export interface Game {
   id: string;
@@ -25,7 +32,21 @@ export interface Game {
   /** installed size in GB */
   installedSizeGb: number;
   genre: string;
+  /** ISO timestamp the title was added to the library */
+  addedAt: string;
+  developer: string;
+  publisher: string;
+  releaseYear: number;
+  /** critic score out of 100 */
+  rating: number;
+  description: string;
+  achievements: Achievements;
+  controllerSupport: ControllerSupport;
+  streamingCompat: StreamingCompat;
+  /** true when the platform recommends this title to the user */
+  recommended: boolean;
 }
+
 
 /* -------------------------------------------------------------------------- */
 /* System                                                                     */
@@ -100,6 +121,13 @@ export interface ControllerInfo {
 
 export type StreamState = "idle" | "connecting" | "streaming";
 
+export interface AudioInfo {
+  enabled: boolean;
+  codec: string;
+  channels: string; // e.g. "Stereo", "5.1 Surround"
+  sampleRateKhz: number;
+}
+
 export interface StreamingStatus {
   state: StreamState;
   resolution: string;
@@ -109,5 +137,9 @@ export interface StreamingStatus {
   quality: ConnectionQuality;
   latencyMs: number;
   packetLossPercent: number;
+  hdr: boolean;
+  sessionDuration: string;
+  audio: AudioInfo;
   controller: ControllerInfo;
 }
+
