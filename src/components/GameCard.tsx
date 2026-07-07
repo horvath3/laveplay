@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "@tanstack/react-router";
 import { Play, Download, Heart, Check, Clock } from "lucide-react";
 import type { Game } from "@/lib/types";
 import { storeLabels } from "@/services";
