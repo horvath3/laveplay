@@ -127,21 +127,33 @@ function LibraryPage() {
       </div>
 
 
-      {/* Grid */}
-      <motion.div
-        initial="hidden"
-        animate="show"
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
-        className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-      >
-        {filtered.map((g) => (
-          <GameCard key={g.id} game={g} onToggleFavorite={toggleFavorite} />
-        ))}
-      </motion.div>
+      {/* Results count */}
+      <p className="mt-6 text-sm text-muted-foreground">
+        {filtered.length} {t("lib.results")}
+      </p>
 
-      {filtered.length === 0 && (
-        <p className="mt-16 text-center text-muted-foreground">No games found.</p>
+      {/* Grid */}
+      {filtered.length > 0 ? (
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
+          className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        >
+          {filtered.map((g) => (
+            <GameCard key={g.id} game={g} onToggleFavorite={toggleFavorite} />
+          ))}
+        </motion.div>
+      ) : (
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-3xl border border-dashed border-border py-20 text-center">
+          <span className="grid h-16 w-16 place-items-center rounded-3xl bg-muted text-muted-foreground">
+            <Search className="h-7 w-7" />
+          </span>
+          <p className="font-display text-xl font-bold text-foreground">{t("lib.empty")}</p>
+          <p className="text-sm text-muted-foreground">{t("lib.emptyDesc")}</p>
+        </div>
       )}
     </AppLayout>
   );
+
 }
