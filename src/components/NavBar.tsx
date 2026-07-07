@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 const mainLinks: { to: string; key: TKey; icon: React.ElementType }[] = [
   { to: "/", key: "nav.home", icon: Home },
   { to: "/library", key: "nav.library", icon: Library },
+  { to: "/streaming", key: "nav.streaming", icon: MonitorPlay },
   { to: "/my-pc", key: "nav.mypc", icon: MonitorCog },
   { to: "/settings", key: "nav.settings", icon: Settings },
 ];
