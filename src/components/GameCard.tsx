@@ -74,12 +74,17 @@ export function GameCard({
         </div>
 
         {/* Hover play overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <button className="animate-pulse-ring grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_30px_oklch(0.73_0.19_129/0.6)] transition-transform hover:scale-105">
+        <Link
+          to="/game/$gameId"
+          params={{ gameId: game.id }}
+          className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        >
+          <span className="animate-pulse-ring grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0_30px_oklch(0.73_0.19_129/0.6)] transition-transform hover:scale-105">
             <Play className="ml-0.5 h-7 w-7 fill-current" />
-          </button>
-        </div>
+          </span>
+        </Link>
       </div>
+
 
       {/* Info */}
       <div className="p-4">
