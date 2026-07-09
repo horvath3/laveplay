@@ -20,8 +20,13 @@ export interface Achievements {
 
 export interface Game {
   id: string;
+  gameId: string;
   title: string;
   cover: string;
+  banner: string;
+  icon: string;
+  launcher: string;
+  version: string | null;
   store: StorePlatform;
   installed: boolean;
   favorite: boolean;
@@ -46,7 +51,6 @@ export interface Game {
   /** true when the platform recommends this title to the user */
   recommended: boolean;
 }
-
 
 /* -------------------------------------------------------------------------- */
 /* System                                                                     */
@@ -119,7 +123,8 @@ export interface ControllerInfo {
 /* Streaming                                                                  */
 /* -------------------------------------------------------------------------- */
 
-export type StreamState = "idle" | "connecting" | "streaming";
+export type StreamState =
+  "preparing" | "ready" | "streaming" | "stopping" | "stopped" | "error" | "idle" | "connecting";
 
 export interface AudioInfo {
   enabled: boolean;
@@ -130,6 +135,8 @@ export interface AudioInfo {
 
 export interface StreamingStatus {
   state: StreamState;
+  gameName: string | null;
+  sunshineInstalled: boolean;
   resolution: string;
   fps: number;
   bitrateMbps: number;
@@ -142,4 +149,3 @@ export interface StreamingStatus {
   audio: AudioInfo;
   controller: ControllerInfo;
 }
-

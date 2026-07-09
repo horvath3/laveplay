@@ -3,9 +3,9 @@ import { agentConfig } from "./config";
 /**
  * Thin typed HTTP client for the Lave Agent REST API.
  *
- * Services use this to talk to the Agent when `useMock` is false. Keeping all
- * transport concerns (base URL, headers, error handling, JSON parsing) here
- * means the individual services stay small and focused on their domain.
+ * Keeping all transport concerns (base URL, headers, error handling, JSON
+ * parsing) here means the individual services stay small and focused on their
+ * domain.
  */
 
 export class ApiError extends Error {
@@ -19,15 +19,43 @@ export class ApiError extends Error {
   }
 }
 
+export class ApiConnectionError extends Error {
+  constructor(
+    message: string,
+    readonly url: string,
+  ) {
+    super(message);
+    this.name = "ApiConnectionError";
+  }
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${agentConfig.baseUrl}${path}`;
-  const res = await fetch(url, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-  });
+  let res: Response;
+
+  if (!agentConfig.baseUrl) {
+    throw new ApiConnectionError("VITE_API_BASE_URL is not configured.", url);
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), agentConfig.requestTimeoutMs);
+
+    try {
+      res = await fetch(url, {
+        ...init,
+        signal: init?.signal ?? controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          ...(init?.headers ?? {}),
+        },
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  } catch {
+    throw new ApiConnectionError("Lave Agent is offline or unreachable.", url);
+  }
 
   if (!res.ok) {
     throw new ApiError(`Request failed: ${res.statusText}`, res.status, url);
@@ -47,6 +75,6 @@ export const apiClient = {
   del: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };
 
-/** Small helper so mock service methods feel async like the real ones. */
-export const mockDelay = <T>(value: T, ms = 120): Promise<T> =>
-  new Promise((resolve) => setTimeout(() => resolve(value), ms));
+export const isAgentUnavailable = (error: unknown) =>
+  error instanceof ApiConnectionError ||
+  (error instanceof ApiError && (error.status === 0 || error.status >= 500));

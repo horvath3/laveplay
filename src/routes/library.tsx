@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Search, RefreshCw, Plug, ArrowDownWideNarrow } from "lucide-react";
+import { Search, RefreshCw, Plug, ArrowDownWideNarrow, AlertCircle } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { GameCard } from "@/components/GameCard";
 import { useI18n, type TKey } from "@/lib/i18n";
@@ -23,18 +23,46 @@ type Sort = "recent" | "name" | "playtime" | "size" | "rating";
 
 function LibraryPage() {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const [games, setGames] = useState<Game[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("recent");
+  const [loading, setLoading] = useState(true);
+  const [launchingId, setLaunchingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    GameService.list().then(setGames);
+    setLoading(true);
+    GameService.list()
+      .then(setGames)
+      .catch(() => setError("Lave Agent is unavailable. Start the Agent and refresh the library."))
+      .finally(() => setLoading(false));
   }, []);
 
   const toggleFavorite = async (id: string) => {
     await GameService.toggleFavorite(id);
     setGames((prev) => prev.map((g) => (g.id === id ? { ...g, favorite: !g.favorite } : g)));
+  };
+
+  const playGame = async (id: string) => {
+    setError(null);
+    setLaunchingId(id);
+
+    try {
+      const result = await GameService.launch(id);
+
+      if (!result.started) {
+        setError("The Agent could not start this game.");
+        return;
+      }
+
+      await navigate({ to: "/streaming" });
+    } catch {
+      setError("The Agent could not start this game.");
+    } finally {
+      setLaunchingId(null);
+    }
   };
 
   const filtered = useMemo(() => {
@@ -128,12 +156,26 @@ function LibraryPage() {
 
 
       {/* Results count */}
-      <p className="mt-6 text-sm text-muted-foreground">
-        {filtered.length} {t("lib.results")}
-      </p>
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-foreground">
+          {loading ? "Loading library..." : `${filtered.length} ${t("lib.results")}`}
+        </p>
+        {error && (
+          <p className="glass inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-destructive">
+            <AlertCircle className="h-4 w-4" />
+            {error}
+          </p>
+        )}
+      </div>
 
       {/* Grid */}
-      {filtered.length > 0 ? (
+      {loading ? (
+        <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div key={index} className="glass aspect-[3/5] animate-pulse rounded-2xl" />
+          ))}
+        </div>
+      ) : filtered.length > 0 ? (
         <motion.div
           initial="hidden"
           animate="show"
@@ -141,7 +183,13 @@ function LibraryPage() {
           className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
           {filtered.map((g) => (
-            <GameCard key={g.id} game={g} onToggleFavorite={toggleFavorite} />
+            <GameCard
+              key={g.id}
+              game={g}
+              onToggleFavorite={toggleFavorite}
+              onPlay={playGame}
+              launching={launchingId === g.id}
+            />
           ))}
         </motion.div>
       ) : (

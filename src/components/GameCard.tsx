@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
-import { Play, Download, Heart, Check, Clock } from "lucide-react";
+import { Play, Download, Heart, Check, Clock, HardDrive, Layers3, Loader2 } from "lucide-react";
 import type { Game } from "@/lib/types";
 import { storeLabels } from "@/services";
 import { useI18n } from "@/lib/i18n";
@@ -16,19 +16,29 @@ function relativeTime(iso: string | null, neverLabel: string): string {
   return `${d}d ago`;
 }
 
-function playTime(min: number): string {
-  const h = Math.floor(min / 60);
-  return h > 0 ? `${h}h` : `${min}m`;
+function launcherMark(label: string): string {
+  return label
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
 }
 
 export function GameCard({
   game,
   onToggleFavorite,
+  onPlay,
+  launching,
 }: {
   game: Game;
   onToggleFavorite?: (id: string) => void;
+  onPlay?: (id: string) => void;
+  launching?: boolean;
 }) {
   const { t } = useI18n();
+  const launcherLabel = game.launcher || storeLabels[game.store];
 
   return (
     <motion.div
@@ -37,20 +47,34 @@ export function GameCard({
       className="group glass relative overflow-hidden rounded-2xl transition-shadow duration-300 hover:shadow-[0_28px_70px_-24px_oklch(0.73_0.19_129/0.45)]"
     >
       <div className="relative aspect-[3/4] overflow-hidden">
-        <img
-          src={game.cover}
-          alt={game.title}
-          loading="lazy"
-          width={600}
-          height={800}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+        {game.cover ? (
+          <img
+            src={game.cover}
+            alt={game.title}
+            loading="lazy"
+            width={600}
+            height={800}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_50%_18%,oklch(0.73_0.19_129/0.24),transparent_42%),linear-gradient(145deg,oklch(0.24_0.02_240),oklch(0.15_0.012_240))] px-5 text-center">
+            <Layers3 className="h-12 w-12 text-primary/80" />
+            <span className="line-clamp-3 font-display text-lg font-extrabold text-foreground">{game.title}</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
         {/* Top badges */}
         <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">
-          <span className="glass rounded-full px-2.5 py-1 text-[11px] font-semibold text-foreground/90">
-            {storeLabels[game.store]}
+          <span className="glass inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold text-foreground/90">
+            {game.icon ? (
+              <img src={game.icon} alt="" className="h-4 w-4 rounded object-cover" />
+            ) : (
+              <span className="grid h-4 w-4 place-items-center rounded bg-primary/20 text-[9px] font-black text-primary">
+                {launcherMark(launcherLabel)}
+              </span>
+            )}
+            {launcherLabel}
           </span>
           <div className="flex gap-1.5">
             {game.installed && (
@@ -59,7 +83,10 @@ export function GameCard({
               </span>
             )}
             <button
-              onClick={() => onToggleFavorite?.(game.id)}
+              onClick={(event) => {
+                event.preventDefault();
+                onToggleFavorite?.(game.id);
+              }}
               aria-label="favorite"
               className="glass grid h-7 w-7 place-items-center rounded-full transition-colors hover:border-primary/50"
             >
@@ -93,7 +120,7 @@ export function GameCard({
             <Link to="/game/$gameId" params={{ gameId: game.id }} className="block">
               <h3 className="truncate font-display text-base font-bold text-foreground transition-colors hover:text-primary">{game.title}</h3>
             </Link>
-            <p className="text-xs text-muted-foreground">{game.genre}</p>
+            <p className="truncate text-xs text-muted-foreground">{launcherLabel}</p>
           </div>
 
         </div>
@@ -103,20 +130,30 @@ export function GameCard({
             <Clock className="h-3 w-3 text-primary" />
             {relativeTime(game.lastPlayed, t("lib.never"))}
           </span>
-          <span className="text-right font-mono">{playTime(game.playTimeMinutes)}</span>
-          <span>{t("lib.size")}</span>
+          <span className="truncate text-right font-mono">{game.version || "v - "}</span>
+          <span className="flex items-center gap-1">
+            <HardDrive className="h-3 w-3 text-primary" />
+            {t("lib.size")}
+          </span>
           <span className="text-right font-mono">{game.installedSizeGb.toFixed(1)} GB</span>
         </div>
 
         <button
+          onClick={() => game.installed && !launching && onPlay?.(game.id)}
+          disabled={!game.installed || launching}
           className={cn(
             "mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all",
             game.installed
               ? "bg-primary text-primary-foreground hover:bg-primary-glow hover:shadow-[0_0_24px_oklch(0.73_0.19_129/0.5)]"
               : "glass text-foreground hover:border-primary/50",
+            (!game.installed || launching) && "cursor-not-allowed opacity-70",
           )}
         >
-          {game.installed ? (
+          {launching ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> STARTING
+            </>
+          ) : game.installed ? (
             <>
               <Play className="h-4 w-4 fill-current" /> {t("lib.play")}
             </>

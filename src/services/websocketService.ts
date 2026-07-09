@@ -7,10 +7,9 @@ import { agentConfig } from "./config";
  *   { "topic": "system", "payload": { ...SystemInfo } }
  *   { "topic": "streaming", "payload": { ...StreamingStatus } }
  *
- * Consumers subscribe to a topic and receive typed payloads. Today, while
- * `agentConfig.useMock` is true, no real socket is opened — services drive
- * their own simulated updates instead. When mock mode is turned off this class
- * connects for real, fans out frames to subscribers, and auto-reconnects.
+ * Consumers subscribe to a topic and receive typed payloads. The current Lave
+ * Agent integration polls REST endpoints; this class remains ready for a
+ * future socket endpoint.
  */
 
 export type Topic = "system" | "streaming" | "network" | "games";
@@ -27,9 +26,7 @@ class WebSocketService {
     if (!this.handlers.has(topic)) this.handlers.set(topic, new Set());
     this.handlers.get(topic)!.add(handler as Handler);
 
-    // In mock mode the socket stays closed; SystemService / StreamingService
-    // simulate their own live updates. Only connect for the real Agent.
-    if (!agentConfig.useMock) this.connect();
+    if (agentConfig.wsUrl) this.connect();
 
     return () => {
       this.handlers.get(topic)?.delete(handler as Handler);

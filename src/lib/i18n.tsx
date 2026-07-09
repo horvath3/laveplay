@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type Lang = "en" | "hu";
 
@@ -82,7 +75,10 @@ export const translations = {
 
   // My PC
   "mypc.title": { en: "My PC", hu: "A gépem" },
-  "mypc.subtitle": { en: "Live system information from Lave Agent.", hu: "Élő rendszeradatok a Lave Agenttől." },
+  "mypc.subtitle": {
+    en: "Live system information from Lave Agent.",
+    hu: "Élő rendszeradatok a Lave Agenttől.",
+  },
   "mypc.performance": { en: "Performance", hu: "Teljesítmény" },
   "mypc.temps": { en: "Temperatures", hu: "Hőmérséklet" },
   "mypc.system": { en: "System", hu: "Rendszer" },
@@ -115,10 +111,16 @@ export const translations = {
 
   // Settings
   "set.title": { en: "Settings", hu: "Beállítások" },
-  "set.subtitle": { en: "Tune your cloud gaming experience.", hu: "Hangold a felhő-gaming élményt." },
+  "set.subtitle": {
+    en: "Tune your cloud gaming experience.",
+    hu: "Hangold a felhő-gaming élményt.",
+  },
   "set.appearance": { en: "Appearance", hu: "Megjelenés" },
   "set.darkMode": { en: "Dark Mode", hu: "Sötét mód" },
-  "set.darkModeDesc": { en: "Use the dark futuristic theme", hu: "Sötét, futurisztikus téma használata" },
+  "set.darkModeDesc": {
+    en: "Use the dark futuristic theme",
+    hu: "Sötét, futurisztikus téma használata",
+  },
   "set.language": { en: "Language", hu: "Nyelv" },
   "set.languageDesc": { en: "Interface language", hu: "Felület nyelve" },
   "set.stream": { en: "Streaming", hu: "Streamelés" },
@@ -128,25 +130,43 @@ export const translations = {
   "set.quality": { en: "Quality", hu: "Minőség" },
   "set.resolution": { en: "Resolution", hu: "Felbontás" },
   "set.controllerSupport": { en: "Controller Support", hu: "Kontroller támogatás" },
-  "set.controllerDesc": { en: "Enable gamepad input over the stream", hu: "Gamepad bemenet engedélyezése a streamen" },
+  "set.controllerDesc": {
+    en: "Enable gamepad input over the stream",
+    hu: "Gamepad bemenet engedélyezése a streamen",
+  },
   "set.automation": { en: "PC Automation", hu: "Gép automatizálás" },
   "set.wol": { en: "Wake-on-LAN", hu: "Wake-on-LAN" },
-  "set.wolDesc": { en: "Wake your PC remotely before a session", hu: "Gép távoli ébresztése munkamenet előtt" },
+  "set.wolDesc": {
+    en: "Wake your PC remotely before a session",
+    hu: "Gép távoli ébresztése munkamenet előtt",
+  },
   "set.autoSleep": { en: "Auto sleep after gaming", hu: "Automatikus alvás játék után" },
-  "set.autoSleepDesc": { en: "Sleep the PC when the session ends", hu: "Gép altatása a munkamenet végén" },
+  "set.autoSleepDesc": {
+    en: "Sleep the PC when the session ends",
+    hu: "Gép altatása a munkamenet végén",
+  },
   "set.autoShutdown": { en: "Auto shutdown after gaming", hu: "Automatikus leállítás játék után" },
   "set.autoShutdownDesc": { en: "Power off after inactivity", hu: "Kikapcsolás tétlenség után" },
   "set.autoSteam": { en: "Auto launch Steam", hu: "Steam automatikus indítása" },
   "set.autoSteamDesc": { en: "Start Steam on connect", hu: "Steam indítása csatlakozáskor" },
   "set.autoReconnect": { en: "Auto reconnect", hu: "Automatikus újracsatlakozás" },
-  "set.autoReconnectDesc": { en: "Reconnect after a dropped stream", hu: "Újracsatlakozás megszakadt stream után" },
+  "set.autoReconnectDesc": {
+    en: "Reconnect after a dropped stream",
+    hu: "Újracsatlakozás megszakadt stream után",
+  },
   "set.notifications": { en: "Notifications", hu: "Értesítések" },
-  "set.notifDesc": { en: "Session, update and status alerts", hu: "Munkamenet, frissítés és állapot értesítések" },
+  "set.notifDesc": {
+    en: "Session, update and status alerts",
+    hu: "Munkamenet, frissítés és állapot értesítések",
+  },
   "set.soon": { en: "Coming soon", hu: "Hamarosan" },
 
   // Login
   "login.welcome": { en: "Welcome back", hu: "Üdv újra" },
-  "login.subtitle": { en: "Sign in to reach your gaming PC.", hu: "Jelentkezz be a gaming gépedhez." },
+  "login.subtitle": {
+    en: "Sign in to reach your gaming PC.",
+    hu: "Jelentkezz be a gaming gépedhez.",
+  },
   "login.email": { en: "Email", hu: "E-mail" },
   "login.password": { en: "Password", hu: "Jelszó" },
   "login.remember": { en: "Remember me", hu: "Emlékezz rám" },
@@ -166,10 +186,19 @@ export const translations = {
   "home.viewAll": { en: "View all", hu: "Összes" },
   "home.openStream": { en: "Open stream view", hu: "Stream nézet megnyitása" },
   "home.noStream": { en: "No active stream", hu: "Nincs aktív stream" },
-  "home.noStreamDesc": { en: "Launch a game to start streaming.", hu: "Indíts egy játékot a streameléshez." },
+  "home.noStreamDesc": {
+    en: "Launch a game to start streaming.",
+    hu: "Indíts egy játékot a streameléshez.",
+  },
   "home.emptyRow": { en: "Nothing here yet", hu: "Itt még nincs semmi" },
-  "home.emptyContinue": { en: "Games you play will appear here.", hu: "A játszott játékok itt jelennek meg." },
-  "home.emptyFav": { en: "Mark games as favorite to see them here.", hu: "Jelölj kedvencnek játékokat, hogy itt lásd őket." },
+  "home.emptyContinue": {
+    en: "Games you play will appear here.",
+    hu: "A játszott játékok itt jelennek meg.",
+  },
+  "home.emptyFav": {
+    en: "Mark games as favorite to see them here.",
+    hu: "Jelölj kedvencnek játékokat, hogy itt lásd őket.",
+  },
   "home.stable": { en: "Stable", hu: "Stabil" },
   "home.jitter": { en: "Jitter", hu: "Ingadozás" },
 
@@ -181,7 +210,10 @@ export const translations = {
   "lib.sortSize": { en: "Largest Size", hu: "Legnagyobb méret" },
   "lib.sortRating": { en: "Top Rated", hu: "Legjobbra értékelt" },
   "lib.empty": { en: "No games found", hu: "Nincs találat" },
-  "lib.emptyDesc": { en: "Try a different search or filter.", hu: "Próbálj más keresést vagy szűrőt." },
+  "lib.emptyDesc": {
+    en: "Try a different search or filter.",
+    hu: "Próbálj más keresést vagy szűrőt.",
+  },
   "lib.results": { en: "games", hu: "játék" },
   "lib.details": { en: "Details", hu: "Részletek" },
 
@@ -192,7 +224,10 @@ export const translations = {
   "game.stream": { en: "Stream", hu: "Streamelés" },
   "game.about": { en: "About", hu: "Leírás" },
   "game.achievements": { en: "Achievements", hu: "Eredmények" },
-  "game.achievementsSoon": { en: "Detailed achievements coming soon", hu: "Részletes eredmények hamarosan" },
+  "game.achievementsSoon": {
+    en: "Detailed achievements coming soon",
+    hu: "Részletes eredmények hamarosan",
+  },
   "game.unlocked": { en: "unlocked", hu: "feloldva" },
   "game.details": { en: "Game Details", hu: "Játék adatok" },
   "game.playTime": { en: "Play Time", hu: "Játékidő" },
@@ -205,7 +240,10 @@ export const translations = {
   "game.controller": { en: "Controller Support", hu: "Kontroller támogatás" },
   "game.compat": { en: "Streaming Compatibility", hu: "Stream kompatibilitás" },
   "game.notFound": { en: "Game not found", hu: "A játék nem található" },
-  "game.notFoundDesc": { en: "This title isn't in your library.", hu: "Ez a játék nincs a könyvtáradban." },
+  "game.notFoundDesc": {
+    en: "This title isn't in your library.",
+    hu: "Ez a játék nincs a könyvtáradban.",
+  },
   "ctrl.full": { en: "Full Support", hu: "Teljes támogatás" },
   "ctrl.partial": { en: "Partial Support", hu: "Részleges támogatás" },
   "ctrl.none": { en: "Not Supported", hu: "Nem támogatott" },
@@ -215,7 +253,10 @@ export const translations = {
 
   // Streaming page
   "stream.title": { en: "Streaming", hu: "Streamelés" },
-  "stream.subtitle": { en: "Live session performance and stream health.", hu: "Élő munkamenet teljesítménye és stream állapota." },
+  "stream.subtitle": {
+    en: "Live session performance and stream health.",
+    hu: "Élő munkamenet teljesítménye és stream állapota.",
+  },
   "stream.status": { en: "Stream Status", hu: "Stream állapot" },
   "stream.active": { en: "Streaming", hu: "Streamel" },
   "stream.idle": { en: "Idle", hu: "Tétlen" },
@@ -238,6 +279,35 @@ export const translations = {
   "stream.on": { en: "On", hu: "Be" },
   "stream.off": { en: "Off", hu: "Ki" },
   "stream.stop": { en: "Stop Session", hu: "Munkamenet leállítása" },
+  "stream.gameName": { en: "Game Name", hu: "Játék neve" },
+  "stream.controller": { en: "Controller", hu: "Kontroller" },
+  "stream.startStream": { en: "Start Stream", hu: "Stream indítása" },
+  "stream.stopStream": { en: "Stop Stream", hu: "Stream leállítása" },
+  "stream.restartStream": { en: "Restart Stream", hu: "Stream újraindítása" },
+  "stream.working": { en: "Working", hu: "Folyamatban" },
+  "stream.noActiveGame": { en: "No active game", hu: "Nincs aktív játék" },
+  "stream.noActiveGameDesc": {
+    en: "Start a game on the host PC to open a live streaming dashboard.",
+    hu: "Indíts egy játékot a gépen az élő streaming dashboardhoz.",
+  },
+  "stream.controllerEmpty": {
+    en: "No controller input detected",
+    hu: "Nincs érzékelt kontroller bemenet",
+  },
+  "stream.sunshineMissing": {
+    en: "Sunshine is not installed",
+    hu: "A Sunshine nincs telepítve",
+  },
+  "stream.sunshineMissingDesc": {
+    en: "Install and configure Sunshine on the host PC before starting a remote stream.",
+    hu: "Telepítsd és állítsd be a Sunshine-t a gépen, mielőtt távoli streamet indítasz.",
+  },
+  "stream.status.preparing": { en: "Preparing", hu: "Előkészítés" },
+  "stream.status.ready": { en: "Ready", hu: "Kész" },
+  "stream.status.streaming": { en: "Streaming", hu: "Streamel" },
+  "stream.status.stopping": { en: "Stopping", hu: "Leállítás" },
+  "stream.status.stopped": { en: "Stopped", hu: "Leállítva" },
+  "stream.status.error": { en: "Error", hu: "Hiba" },
   "quality.excellent": { en: "Excellent", hu: "Kiváló" },
   "quality.good": { en: "Good", hu: "Jó" },
   "quality.fair": { en: "Fair", hu: "Megfelelő" },
@@ -248,7 +318,6 @@ export const translations = {
   "mypc.currentFps": { en: "Current FPS", hu: "Aktuális FPS" },
   "mypc.jitter": { en: "Jitter", hu: "Ingadozás" },
   "mypc.viewStream": { en: "View full stream", hu: "Teljes stream nézet" },
-
 
   // Common
   "common.online": { en: "Online", hu: "Elérhető" },
@@ -300,9 +369,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = useCallback((key: TKey) => translations[key][lang], [lang]);
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, toggleLang, t }}>
-      {children}
-    </I18nContext.Provider>
+    <I18nContext.Provider value={{ lang, setLang, toggleLang, t }}>{children}</I18nContext.Provider>
   );
 }
 
